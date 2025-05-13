@@ -1,0 +1,11 @@
+numpy
+scikit-learn
+scipy
+pandas
+segmentation-models-pytorch==0.4.0
+wandb
+deap==1.4.2
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.6.0
+torchvision==0.21.0
+torchaudio==2.6.0
