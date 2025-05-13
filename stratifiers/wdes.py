@@ -2,18 +2,16 @@ from sklearn.model_selection._split import _BaseKFold
 import numpy as np
 from deap import base, creator, tools, algorithms
 import random
-import multiprocessing
 from scipy.stats import wasserstein_distance
 from sklearn.model_selection import KFold
 from tqdm import tqdm
 
 
 class WDESKFold(_BaseKFold):
-    def __init__(self, n_splits=10, shuffle=False, random_state=None, n_gen = 50, n_pop = 100, ed_weight = 0):
+    def __init__(self, n_splits=10, shuffle=False, random_state=None, n_gen = 50, n_pop = 100):
         super().__init__(n_splits=n_splits, shuffle=shuffle, random_state=random_state)
         self.n_gen = n_gen
         self.n_pop = n_pop
-        self.ed_weight = ed_weight
         # Initializes equal split
         self.r = np.asarray([1 / self.n_splits] * self.n_splits)
 

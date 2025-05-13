@@ -42,6 +42,8 @@ Use the `-s` flag to select one of the following strategies:
 * wdes — Wasserstein Distance Evolutionary Stratification (ours)
 For additional datasets and models, refer to the scripts and configuration options in the repository.
 
-## Contributing
+## License
 
->📋  Pick a licence and describe how to contribute to your code repository. 
+This code is released for academic review purposes only as part of a NeurIPS 2025 submission.
+
+**All rights reserved.**

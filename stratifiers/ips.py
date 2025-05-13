@@ -1,7 +1,5 @@
 from sklearn.model_selection._split import _BaseKFold
 import numpy as np
-from scipy.stats import wasserstein_distance
-
 
 class IPSKFold(_BaseKFold):
     def __init__(self, n_splits=10, shuffle=False, random_state=None):
@@ -31,10 +29,6 @@ class IPSKFold(_BaseKFold):
 
         # Calculate optimal splits
         self.best_folds = self.optimize()
-
-        # Calculate metrics for split
-        self.edw, self.wd = self._fitness(self.best_folds, return_metrics=True)
-        self.ed = np.mean(np.abs(self.n_samples_in_fold - self.desired_n_samples_in_fold))
 
         # Yield
         for fold_number in range(self.n_splits):
@@ -77,56 +71,3 @@ class IPSKFold(_BaseKFold):
                 desired_n_pixels_in_folds_per_class[fold_idx][self.one_hot[sample_idx] == 1] -= self.pixel_counts[sample_idx][self.one_hot[sample_idx] == 1]
 
         return best_individual
-    
-    def _fitness(self, individual, return_metrics = False):
-
-        self.n_samples_in_fold = np.bincount(individual, minlength=self.n_splits)
-
-        self.n_pixels_in_fold_per_class = np.zeros((self.n_splits, self.num_classes))
-
-        for fold_number in range(self.n_splits):
-            samples_in_fold = [i == fold_number for i in individual]
-            self.n_pixels_in_fold_per_class[fold_number, :] = np.sum(self.pixel_counts[samples_in_fold], axis=0)
-
-        edw = self._ed_wasserstein()
-        wd = self._wd()
-
-        if return_metrics:
-            return edw, wd
-    
-    def _ed_wasserstein(self):
-        # get deviation from uniform distribution of samples/examples 
-        edw = wasserstein_distance(np.arange(self.n_splits), 
-                                                        np.arange(self.n_splits), 
-                                                        self.n_samples_in_fold, 
-                                                        self.r)
-        
-        return edw
-    
-    def _wd(self):
-        pdm = []
-        for fold_number in range(self.n_splits):
-            pdm_f = wasserstein_distance(u_values= np.arange(self.num_classes).astype(np.float64), 
-                                            v_values= np.arange(self.num_classes).astype(np.float64),
-                                            u_weights= self.n_pixels_in_fold_per_class[fold_number].astype(np.float64), 
-                                            v_weights= self.n_pixels_per_class.astype(np.float64))
-            pdm.append(pdm_f)
-        return np.mean(pdm)
-    
-# Example usage
-if __name__ == "__main__":
-    # from sklearn.datasets import make_classification
-    # from sklearn.model_selection import cross_val_score
-    # from sklearn.ensemble import RandomForestClassifier
-
-    # X, y = make_classification(n_samples=100, n_features=20, n_classes=2, random_state=42)
-    # custom_cv = CustomStratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-    # model = RandomForestClassifier()
-
-    # scores = cross_val_score(model, X, y, cv=custom_cv)
-    # print("Cross-validation scores:", scores)
-
-    mask = np.random.randint(0, 9, size=(1, 512, 512))
-    # print([np.bincount(mask.flatten(), minlength=9)[j] for j in range(9)])
-
-
