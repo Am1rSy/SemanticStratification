@@ -52,7 +52,7 @@ def main():
     parser.add_argument('--stratify', '-s', choices=['random', 'ips', 'wdes'], required=True)
     parser.add_argument('--model', '-m', choices=['unet'], required=True)
     parser.add_argument('--epochs', '-e', type=int, required=True)
-    parser.add_argument('--learning-rate', '-lr', type=float, required=True)
+    parser.add_argument('--lr', type=float, required=True)
     parser.add_argument('--batch-size', '-bs', type=int, required=True)
     parser.add_argument('--dataset', '-d',
                         choices=['cityscapes', 'camvid', 'pascalvoc', 'loveda', 'endovis'], required=True)
@@ -82,10 +82,9 @@ def main():
         train_loader = DataLoader(Subset(dataset, train_idx), batch_size=args.batch_size, shuffle=True)
         test_loader = DataLoader(Subset(dataset, test_idx), batch_size=args.batch_size, shuffle=False)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
         criterion = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, from_logits=True)
         if args.dataset == 'pascalvoc':
-            optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
             criterion = torch.nn.CrossEntropyLoss()
 
         for e in range(args.epochs):
