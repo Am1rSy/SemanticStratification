@@ -1,93 +1,88 @@
-# Stratify or Die
+# Semantic Stratification
 
+This project focuses on semantic stratification of image segmentation datasets. It provides various methods to stratify datasets and calculate metrics to evaluate the stratification.
 
+## Requirements
 
-## Getting started
+You can use the package manager [pip](https://pip.pypa.io/en/stable/) to install the required packages.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+```bash
+pip install -r requirements.txt
 ```
-cd existing_repo
-git remote add origin https://gitlab.cs.fau.de/yk30ulej/stratify-or-die.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.cs.fau.de/yk30ulej/stratify-or-die/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Following are the required software packages:
+1. `numpy==1.24.4`
+2. `scikit-learn==1.3.2`
+3. `scipy==1.10.1`
+4. `pandas==2.0.3`
+5. `deap==1.4`
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```python
+from stratify import Stratify
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+# Load the respective dataset distribution file
+original_dd_csv = './OriginalDataDistribution/Cityscapes_ClassLabels.csv'
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+# Instantiate the Stratify class
+strat1 = Stratify(original_dd_csv, test_size=0.1, random_state=42)
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+# Perform Stratification of choice
+strat1.strat('random')
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+# Calculate Metrics
+strat1.calc_metrics()
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+# Example Distribution
+strat1.metrics['ed'] 
 
-## License
-For open source projects, say how it is licensed.
+# Example Distribution (Wasserstein)
+strat1.metrics['edw']
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+# Wasserstein Distance
+strat1.metrics['wd']
+```
+
+## Stratification Options
+
+1. `RandomKFold`: Randomly divides the dataset into K folds.
+2. `LabelSetStratify`: Divides the dataset based on unique label sets present in the dataset. A unique label set refers to the various combinations of classes present in the images of the dataset.
+3. `ItersetStratify`: Iterative Stratification as described in [1][1].
+4. `ClasspairStratify`: Iterative Stratification as described in [2][2].
+5. `PixelCountItersetStratify`: Iterative Stratification as described in [1][1], but with pixel counts instead of one-hot encoding.
+6. `WDESStratify`: Genetic Algorithm Stratification as described in [3][3].
+
+[1]: https://link.springer.com/chapter/10.1007/978-3-642-23808-6_10
+[2]: http://arxiv.org/abs/1704.08756
+[3]: https://www.mdpi.com/2076-3417/11/6/2823
+
+## Metrics
+For an Image Segmentation Dataset $ D $ annotated with a set of classes $ L  = (\lambda_1, ...,\lambda_q)$, a desired number of folds $ k $ and a desired proportion of samples in each fold $ r_1, ..., r_k $. The output of stratification is disjoint subset $ S_1, ..., S_k $.
+
+The total number of samples is $a$. The number of samples that have class $\lambda_i$ is $a_i$. The number of pixels of $b$. The number of pixels of class $\lambda_i$ is $b_i$. The number of desired samples in fold $ S_j $ is $c_j$. The number of desired samples in fold $S_j$ of that have class $\lambda_i$ is $c_j^i$. The number of desired pixels in fold $S_j$ of class $\lambda_i$ is $e_j^i$.
+
+
+1. Example Distribution (`ed`): The number of samples in each fold compared to the desired number of samples in each fold.
+
+$$ED = \frac{1}{k}\sum_{j=1}^{k}|\hat{c}_j - c_j|$$
+2. Labels Distribution (`ld`): The number of samples in each fold for every class compared to the same distribution in the original dataset.
+
+$$LD = \frac{1}{q}\sum_{i=1}^{q}(\frac{1}{k}\sum_{j=1}^{k}||\frac{\hat{c}_j^i}{\hat{c}_j - \hat{c}_j^i} - \frac{a_i}{a - a_i})$$
+3. Labels Pair Distribution (`lpd`): Similar to LD but considers class pairs instead of standalone classes.
+4. Pixel Labels Distribution (`pld`): Similar to LD but uses pixel counts instead of one-hot encoding.
+$$PLD = \frac{1}{q}\sum_{i=1}^{q}(\frac{1}{k}\sum_{j=1}^{k}||\frac{\hat{e}_j^i}{\hat{e}_j - \hat{e}_j^i} - \frac{b_i}{b - b_i})$$
+5. Pixel Labels Pair Distribution (`plpd`): Similar to LPD but uses pixel counts instead of one-hot encoding.
+6. Kolmogorov-Smirnov (`ks`): A metric to compare distributions.
+7. Wasserstein Distance (`ws`): A metric to compare distributions based on the Wasserstein distance.
+
+## To-Do
+
+1. Expand list of datasets covered in `OriginalDataDistribution` folder
+2. Expand list of `Dataset` properties in `Stratify._prepare_dataset_properties()` to better describe datasets that are can be more or less effected in terms of stratification benefits.
+3. Integrate `WDESOptStratify` into the pipeline. (DONE)
+4. Change `_fitness` in `WDESOptimized` to make it fast (remove overhead). (DONE)
+5. Integrate Example Distribution as a constraint on DEAP. (DONE)
+6. Get started on building a training pipeline for `RandomKFold` and `WDESOptStratify`.
+7. Create Overleaf project to track results.
+8. Change `individual` to maintain uniform sample distribution. (DONE)
+9. Migrate to gitlab.cs.fau.de. (DONE)
