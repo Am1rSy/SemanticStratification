@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import DataLoader, Subset
 from torchvision.transforms import ToTensor, Lambda
 from typing import Literal
-from data import LoveDADataset, CityScapesDataset, CamVidDataset, PascalVOCDataset, EndoVisDataset
+from data import CamVidDataset
 from stratifiers.kfold import KFoldWrapper
 from stratifiers.wdes import WDESKFold
 from stratifiers.ips import IPSKFold
@@ -15,16 +15,8 @@ import random
 def get_dataset(name: str, path: str):
     annotation_transform = Lambda(lambda x: torch.as_tensor(np.expand_dims(np.array(x), 0), dtype=torch.int64))
     common_args = {'split': 'train', 'image_transform': ToTensor(), 'annotation_transform': annotation_transform}
-    if name == 'cityscapes':
-        return CityScapesDataset(path, **common_args)
-    if name == 'loveda':
-        return LoveDADataset(path, **common_args)
     if name == 'camvid':
         return CamVidDataset(path, **common_args)
-    if name == 'pascalvoc':
-        return PascalVOCDataset(path, **common_args)
-    if name == 'endovis':
-        return EndoVisDataset(path, **common_args)
     raise ValueError('Unsupported dataset {}'.format(name))
 
 def get_model(name: str, num_channels: int, num_classes: int):
@@ -55,7 +47,7 @@ def main():
     parser.add_argument('--lr', type=float, required=True)
     parser.add_argument('--batch-size', '-bs', type=int, required=True)
     parser.add_argument('--dataset', '-d',
-                        choices=['cityscapes', 'camvid', 'pascalvoc', 'loveda', 'endovis'], required=True)
+                        choices=['camvid'], required=True)
     parser.add_argument('--path', '-p', required=True)
     parser.add_argument('--n_splits', required=True, type=int)
     parser.add_argument('--fold', '-f', nargs='+', type=int)
