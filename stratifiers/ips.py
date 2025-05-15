@@ -1,5 +1,6 @@
 from sklearn.model_selection._split import _BaseKFold
 import numpy as np
+from tqdm import tqdm
 
 class IPSKFold(_BaseKFold):
     def __init__(self, n_splits=10, shuffle=False, random_state=None):
@@ -16,7 +17,8 @@ class IPSKFold(_BaseKFold):
 
         # Get mask information 
         self.pixel_counts = np.zeros([self.num_samples, self.num_classes])
-        for i, (_, mask) in enumerate(self.dataset):
+        print("Reading dataset information for stratifier")
+        for i, (_, mask) in tqdm(enumerate(self.dataset)):
             self.pixel_counts[i,:] = [np.bincount(mask.flatten(), minlength=self.num_classes)[j] 
                                       for j in range(self.num_classes)]
         
@@ -28,6 +30,7 @@ class IPSKFold(_BaseKFold):
         self.desired_n_samples_in_fold = self.r * self.num_samples
 
         # Calculate optimal splits
+        print("Starting IPS")
         self.best_folds = self.optimize()
 
         # Yield

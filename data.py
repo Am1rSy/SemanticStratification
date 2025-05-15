@@ -20,7 +20,7 @@ class CamVidDataset(Dataset):
         
         ## this assumes prerpoc script was already used
         # Load images imags and annotations
-        self.img_files, self.ann_files = self._get_png_and_jpg_files(os.path.join(path, "camvid"))
+        self.img_files, self.ann_files = self._get_png_and_jpg_files(os.path.join(path, "camvid/bluechannel/"))
         
         assert len(self.img_files) == len(self.ann_files)
     

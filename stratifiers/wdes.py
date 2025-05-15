@@ -24,7 +24,9 @@ class WDESKFold(_BaseKFold):
 
         # Get mask information 
         self.pixel_counts = np.zeros([self.num_samples, self.num_classes])
-        for i, (_, mask) in tqdm(enumerate(self.dataset)):
+        print("Reading dataset information for stratifier")
+        for i in tqdm(range(len(self.dataset))):
+            _, mask = self.dataset[i]
             self.pixel_counts[i,:] = [np.bincount(mask.flatten(), minlength=self.num_classes)[j] 
                                       for j in range(self.num_classes)]
             
@@ -171,7 +173,7 @@ class WDESKFold(_BaseKFold):
             ind.fitness.values = toolbox.evaluate(ind)  # Assign fitness values
 
         # Evolutionary loop with fitness tracking
-        print("Starting GA")
+        print("Starting WDES")
         for _ in tqdm(range(1, self.n_gen + 1)):
             pop, _ = algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.2, ngen=1, 
                                         halloffame=hof, verbose=False)

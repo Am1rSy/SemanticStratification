@@ -21,9 +21,9 @@ We demonstrate training on the `CamVid` dataset using different stratification a
 
 To download and extract the `CamVid` dataset from a publicly hosted instance:
 ```bash
-mkdir dataset
-wget https://datasets.cms.waikato.ac.nz/ufdl/data/camvid/camvid-bluechannel.zip -O ./dataset/camvid.zip
-unzip -q ./dataset/camvid.zip -d dataset/camvid
+mkdir datasets
+wget https://datasets.cms.waikato.ac.nz/ufdl/data/camvid/camvid-bluechannel.zip -O ./datasets/camvid.zip
+unzip -q ./datasets/camvid.zip -d dataset/camvid
 ```
 
 ## Training
@@ -31,7 +31,7 @@ unzip -q ./dataset/camvid.zip -d dataset/camvid
 To reproduce our `CamVid` experiments using the `UNet` model with `WDES` stratification (fold `0`):
 
 ```train
-python train.py -d camvid -p ./datasets  -m unet -s wdes -f 0 -e 50 -bs 4 -lr 2e-4
+python train.py -d camvid -p ./datasets  -m unet -s wdes -ns 10 -f 0 -e 50 -bs 4 -lr 2e-4
 ```
 
 ## Stratification Options

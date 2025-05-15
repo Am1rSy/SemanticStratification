@@ -11,6 +11,7 @@ from stratifiers.kfold import KFoldWrapper
 from stratifiers.wdes import WDESKFold
 from stratifiers.ips import IPSKFold
 import random
+from tqdm import tqdm
 
 def get_dataset(name: str, path: str):
     annotation_transform = Lambda(lambda x: torch.as_tensor(np.expand_dims(np.array(x), 0), dtype=torch.int64))
@@ -44,12 +45,12 @@ def main():
     parser.add_argument('--stratify', '-s', choices=['random', 'ips', 'wdes'], required=True)
     parser.add_argument('--model', '-m', choices=['unet'], required=True)
     parser.add_argument('--epochs', '-e', type=int, required=True)
-    parser.add_argument('--lr', type=float, required=True)
+    parser.add_argument('--learning_rate', '-lr', type=float, required=True)
     parser.add_argument('--batch-size', '-bs', type=int, required=True)
     parser.add_argument('--dataset', '-d',
                         choices=['camvid'], required=True)
     parser.add_argument('--path', '-p', required=True)
-    parser.add_argument('--n_splits', required=True, type=int)
+    parser.add_argument('--n_splits', '-ns', required=True, type=int)
     parser.add_argument('--fold', '-f', nargs='+', type=int)
     args = parser.parse_args()
 
@@ -74,12 +75,13 @@ def main():
         train_loader = DataLoader(Subset(dataset, train_idx), batch_size=args.batch_size, shuffle=True)
         test_loader = DataLoader(Subset(dataset, test_idx), batch_size=args.batch_size, shuffle=False)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
         criterion = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, from_logits=True)
         if args.dataset == 'pascalvoc':
             criterion = torch.nn.CrossEntropyLoss()
 
-        for e in range(args.epochs):
+        print("Begin Training")
+        for e in tqdm(range(args.epochs)):
             model.train()
             for images, annotations in train_loader:
                 images, annotations = images.to(device), annotations.to(device)
