@@ -1,13 +1,9 @@
 """
 Dataset classes used to train segmentation models.
 """
-import json
 import os
-import re
 from glob import glob
-from typing import Literal, Optional, Callable, Union
-import numpy as np
-import torch
+from typing import Literal, Optional, Callable
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision.transforms.v2 as transforms
