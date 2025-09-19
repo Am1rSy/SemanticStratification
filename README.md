@@ -40,10 +40,15 @@ Use the `-s` flag to select one of the following strategies:
 * random — standard random splits
 * ips — Iterative Pixel Stratification (ours)
 * wdes — Wasserstein Distance Evolutionary Stratification (ours)
+
 For additional datasets and models, refer to the scripts and configuration options in the repository.
 
 ## License
+This project is licensed under the **[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/)**.
 
-This code is released for academic review purposes only as part of a NeurIPS 2025 submission.
+### What does this mean?
+- **Free for non-commercial use:** You are free to use, modify, and distribute this software for non-commercial purposes.
+- **Commercial use requires a license:** If you intend to use this software for commercial purposes (e.g., as part of a product or service that generates revenue), you must obtain a commercial license.
 
-**All rights reserved.**
+### How to obtain a commercial license
+If you are interested in using this software for commercial purposes, please contact me at **jitin [dot] jami [at] fau [dot] de** to discuss licensing options.
